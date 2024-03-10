@@ -17,11 +17,17 @@ public class StudentService {
         return studentRepository.findAllStudentsByGroup(groupName);
     }
 
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
+    }
+
     public Student add(Student student) {
         return studentRepository.save(student);
     }
 
+    @Transactional
     public void deleteById(long id) {
+        studentRepository.deleteStudentCoursesByStudentId(id);
         studentRepository.deleteById(id);
     }
 
@@ -34,4 +40,6 @@ public class StudentService {
     public void deleteStudentFromCourse(Long studentId, Long courseId) {
         studentRepository.deleteStudentFromCourse(studentId, courseId);
     }
+
+
 }

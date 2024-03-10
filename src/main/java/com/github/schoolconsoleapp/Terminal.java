@@ -78,7 +78,11 @@ public class Terminal implements CommandLineRunner {
 
     private void deleteStudentById() {
         try {
+            System.out.println("All students that we have:");
+            System.out.println(studentService.getAllStudents());
+            System.out.println("Enter the student ID:");
             long studentId = scanner.nextLong();
+            
             studentService.deleteById(studentId);
         } catch (Exception e) {
             logger.error("Error occurred while adding student to course: {}", e.getMessage());
