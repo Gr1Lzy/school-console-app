@@ -21,7 +21,7 @@ public class Terminal implements CommandLineRunner {
     private final CourseService courseService;
     private final StudentService studentService;
     private final StudentCourseService studentCourseService;
-    private Logger logger = LoggerFactory.getLogger(Terminal.class);
+    private final Logger logger = LoggerFactory.getLogger(Terminal.class);
     Scanner scanner = new Scanner(System.in);
     @Override
     public void run(String... args) throws Exception {
@@ -55,50 +55,79 @@ public class Terminal implements CommandLineRunner {
     }
 
     private void removeStudentFromCourse() {
-        studentService.deleteStudentFromCourse(scanner.nextLong(), scanner.nextLong());
+        try {
+            long studentId = scanner.nextLong();
+            long courseId = scanner.nextLong();
+            studentService.deleteStudentFromCourse(studentId, courseId);
+        } catch (Exception e) {
+            logger.error("Error occurred while removing student from course: {}", e.getMessage());
+        }
     }
 
     private void addStudentToCourse() {
-        System.out.println("All courses that we have:");
-        System.out.println(courseService.getAllCourses());
-        studentService.addStudentToCourse(scanner.nextLong(), scanner.nextLong());
+        try {
+            System.out.println("All courses that we have:");
+            System.out.println(courseService.getAllCourses());
+            long studentId = scanner.nextLong();
+            long courseId = scanner.nextLong();
+            studentService.addStudentToCourse(studentId, courseId);
+        } catch (Exception e) {
+            logger.error("Error occurred while adding student to course: {}", e.getMessage());
+        }
     }
 
     private void deleteStudentById() {
-        studentService.deleteById(scanner.nextLong());
+        try {
+            long studentId = scanner.nextLong();
+            studentService.deleteById(studentId);
+        } catch (Exception e) {
+            logger.error("Error occurred while adding student to course: {}", e.getMessage());
+        }
     }
 
     private void addNewStudent() {
-        System.out.println("You can add new student:");
-        Student student = new Student();
-        System.out.println("Write first name:");
-        student.setFirstName(scanner.next("[a-zA-Z]+"));
-        System.out.println("Write last name:");
-        student.setLastName(scanner.next("[a-zA-Z]+"));
-        System.out.println("Write group name from this list:");
-        System.out.println(groupService.findAll());
-        String groupName = scanner.next("[a-zA-Z]{2}-\\\\d{2}");
         try {
-            student.setGroup(groupService.getByName(groupName));
+            System.out.println("You can add a new student:");
+            Student student = new Student();
+            System.out.println("Write first name:");
+            student.setFirstName(scanner.next("[a-zA-Z]+"));
+            System.out.println("Write last name:");
+            student.setLastName(scanner.next("[a-zA-Z]+"));
+            System.out.println("Write group name from this list:");
+            System.out.println(groupService.findAll());
+            String groupName = scanner.next("[a-zA-Z]{2}-\\\\d{2}");
+            Group group = groupService.getByName(groupName);
+            if (group != null) {
+                student.setGroup(group);
+                studentService.add(student);
+            } else {
+                logger.info("Group with this name does not exist");
+            }
         } catch (Exception e) {
-            logger.info("Group with this name does not exist");
+            logger.error("Error occurred while adding new student: {}", e.getMessage());
         }
-        studentService.add(student);
     }
 
     private void findAllStudentsByGroup() {
-        System.out.println("Enter the group name");
-        System.out.println(groupService.findAll());
-        String groupName = scanner.next("[a-zA-Z]{2}-\\\\d{2}");
-        System.out.println("All students from this group:\n"
-                + studentService.findAllStudentsByGroup(groupName));
-
+        try {
+            System.out.println("Enter the group name:");
+            System.out.println(groupService.findAll());
+            String groupName = scanner.next("[a-zA-Z]{2}-\\\\d{2}");
+            System.out.println("All students from this group:\n"
+                    + studentService.findAllStudentsByGroup(groupName));
+        } catch (Exception e) {
+            logger.error("Error occurred while finding students by group: {}", e.getMessage());
+        }
     }
 
     private void findAllGroupsWithLessOrEqualStudentsNumber() {
-        System.out.println("Enter the maximum number of students:");
-        int maxStudents = scanner.nextInt();
-        System.out.println("Groups with less or equal students’ number:\n"
-                + groupService.findByStudentCountLessThanEqual(maxStudents));
+        try {
+            System.out.println("Enter the maximum number of students:");
+            int maxStudents = scanner.nextInt();
+            System.out.println("Groups with less or equal students’ number:\n"
+                    + groupService.findByStudentCountLessThanEqual(maxStudents));
+        } catch (Exception e) {
+            logger.error("Error occurred while finding groups by student count: {}", e.getMessage());
+        }
     }
 }
