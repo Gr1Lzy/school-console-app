@@ -1,8 +1,8 @@
 -- Insert test data into groups table
 INSERT INTO groups (group_name) VALUES
-    ('Group A'),
-    ('Group B'),
-    ('Group C');
+    ('AA-01'),
+    ('AB-02'),
+    ('AC-03');
 
 -- Insert test data into students table
 INSERT INTO students (group_id, first_name, last_name) VALUES
