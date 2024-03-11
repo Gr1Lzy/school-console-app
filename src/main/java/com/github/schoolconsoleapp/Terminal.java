@@ -24,7 +24,7 @@ public class Terminal implements CommandLineRunner {
     private final Logger logger = LoggerFactory.getLogger(Terminal.class);
     Scanner scanner = new Scanner(System.in);
     @Override
-    public void run(String... args) throws Exception {
+    public void run(String... args) {
 
         while (true) {
             System.out.println("Select an option:");

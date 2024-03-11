@@ -40,6 +40,4 @@ public class StudentService {
     public void deleteStudentFromCourse(Long studentId, Long courseId) {
         studentRepository.deleteStudentFromCourse(studentId, courseId);
     }
-
-
 }
